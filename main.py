@@ -1,3 +1,5 @@
+#This is the backend of an image compression algorithm
+
 from flask import Flask, request, jsonify
 import io
 from PIL import Image
