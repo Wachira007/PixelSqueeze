@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Image Compression</title>
+  </head>
+  <body>
+    <h1>Image Compression</h1>
+    <form id="image-form">
+      <label for="image">Select an image:</label>
+      <input type="file" name="image" id="image">
+      <br><br>
+      <button type="submit">Compress Image</button>
+    </form>
+    <br>
+    <div id="result"></div>
+    
+    <script>
+      const form = document.getElementById('image-form');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        
+        const formData = new FormData(form);
+        
+        fetch('/compress_image', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          const result = document.getElementById('result');
+          result.innerHTML = `
+            <p>Original size: ${data.original_size} bytes</p>
+            <p>Compressed size: ${data.compressed_size} bytes</p>
+            <img src="data:image/jpeg;base64,${btoa(String.fromCharCode(...new Uint8Array(data.compressed_image)))}">
+          `;
+        })
+        .catch(error => console.error(error));
+      });
+    </script>
+  </body>
+</html>
